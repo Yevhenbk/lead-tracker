@@ -30,7 +30,10 @@ const INITIAL_FORM_STATE: FormState = {
 };
 
 const inputClass =
-  "w-full rounded-lg border border-sand-200 bg-sand-50 px-3 py-2 text-sm text-ink-900 placeholder-ink-400 focus:border-coffee-500 focus:outline-none focus:ring-1 focus:ring-coffee-500";
+  "w-full rounded-full border border-sand-200 bg-sand-50 px-4 py-2 text-sm text-ink-900 placeholder-ink-400 focus:outline-none";
+
+const textareaClass =
+  "w-full rounded-2xl border border-sand-200 bg-sand-50 px-4 py-2 text-sm text-ink-900 placeholder-ink-400 focus:outline-none";
 
 export default function CreateLeadModal({ onClose, onCreated }: Props) {
   const [formState, setFormState] = useState<FormState>(INITIAL_FORM_STATE);
@@ -173,7 +176,7 @@ export default function CreateLeadModal({ onClose, onCreated }: Props) {
                 value={formState.notes}
                 onChange={(event) => handleFieldChange("notes", event.target.value)}
                 rows={3}
-                className={inputClass}
+                className={textareaClass}
                 placeholder="Additional notes…"
               />
             </div>
@@ -183,14 +186,14 @@ export default function CreateLeadModal({ onClose, onCreated }: Props) {
             <button
               type="button"
               onClick={onClose}
-              className="rounded-lg border border-sand-200 px-4 py-2 text-sm text-ink-600 hover:bg-sand-100 transition-colors"
+              className="rounded-full border border-sand-200 px-4 py-2 text-sm text-ink-600 hover:bg-sand-100 transition-colors"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={isSubmitting}
-              className="rounded-lg bg-coffee-500 px-4 py-2 text-sm font-medium text-white hover:bg-coffee-600 disabled:opacity-50 transition-colors"
+              className="rounded-full bg-accent px-4 py-2 text-sm font-medium text-white hover:bg-accent-hover disabled:opacity-50 transition-colors"
             >
               {isSubmitting ? "Creating…" : "Create Lead"}
             </button>

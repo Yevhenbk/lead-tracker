@@ -13,7 +13,10 @@ interface Props {
 }
 
 const inputClass =
-  "mt-1 w-full rounded-lg border border-sand-200 bg-sand-50 px-3 py-2 text-sm text-ink-900 focus:border-coffee-500 focus:outline-none focus:ring-1 focus:ring-coffee-500";
+  "mt-1 w-full rounded-full border border-sand-200 bg-sand-50 px-4 py-2 text-sm text-ink-900 focus:outline-none";
+
+const textareaClass =
+  "mt-1 w-full rounded-2xl border border-sand-200 bg-sand-50 px-4 py-2 text-sm text-ink-900 focus:outline-none";
 
 function DetailSkeleton() {
   return (
@@ -113,14 +116,14 @@ export default function LeadDetailContent({ leadId }: Props) {
               <>
                 <button
                   onClick={() => { setIsEditing(false); clearActionError(); }}
-                  className="rounded-lg border border-sand-200 px-3 py-1.5 text-sm text-ink-600 hover:bg-sand-100 transition-colors"
+                  className="rounded-full border border-sand-200 px-3 py-1.5 text-sm text-ink-600 hover:bg-sand-100 transition-colors"
                 >
                   Cancel
                 </button>
                 <button
                   onClick={handleSave}
                   disabled={isSaving}
-                  className="rounded-lg bg-coffee-500 px-3 py-1.5 text-sm font-medium text-white hover:bg-coffee-600 disabled:opacity-50 transition-colors"
+                  className="rounded-full bg-accent px-3 py-1.5 text-sm font-medium text-white hover:bg-accent-hover disabled:opacity-50 transition-colors"
                 >
                   {isSaving ? "Saving…" : "Save"}
                 </button>
@@ -129,14 +132,14 @@ export default function LeadDetailContent({ leadId }: Props) {
               <>
                 <button
                   onClick={() => setIsEditing(true)}
-                  className="rounded-lg border border-sand-200 px-3 py-1.5 text-sm text-ink-600 hover:bg-sand-100 transition-colors"
+                  className="rounded-full border border-sand-200 px-3 py-1.5 text-sm text-ink-600 hover:bg-sand-100 transition-colors"
                 >
                   Edit
                 </button>
                 <button
                   onClick={handleDelete}
                   disabled={isDeleting}
-                  className="rounded-lg border border-red-100 px-3 py-1.5 text-sm text-red-500 hover:bg-red-50 disabled:opacity-50 transition-colors"
+                  className="rounded-full border border-red-100 px-3 py-1.5 text-sm text-red-500 hover:bg-red-50 disabled:opacity-50 transition-colors"
                 >
                   {isDeleting ? "Deleting…" : "Delete"}
                 </button>
@@ -197,7 +200,7 @@ export default function LeadDetailContent({ leadId }: Props) {
           <div className="sm:col-span-2">
             <p className="text-xs text-ink-400">Notes</p>
             {isEditing ? (
-              <textarea value={editForm.notes} onChange={(e) => handleFieldChange("notes", e.target.value)} rows={4} className={inputClass} placeholder="Additional notes…" />
+              <textarea value={editForm.notes} onChange={(e) => handleFieldChange("notes", e.target.value)} rows={4} className={textareaClass} placeholder="Additional notes…" />
             ) : (
               <p className="mt-1 text-sm text-ink-900 whitespace-pre-wrap">{lead.notes ?? "—"}</p>
             )}

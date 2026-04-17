@@ -110,11 +110,11 @@ export default function LeadsPageContent({ currentParams }: Props) {
             value={searchInput}
             onChange={(event) => setSearchInput(event.target.value)}
             placeholder="Search by name, email, company..."
-            className="w-64 rounded-lg border border-sand-200 bg-white px-3 py-2 text-sm text-ink-900 placeholder-ink-400 focus:border-coffee-500 focus:outline-none focus:ring-1 focus:ring-coffee-500"
+            className="w-64 rounded-full border border-sand-200 bg-white px-4 py-2 text-sm text-ink-900 placeholder-ink-400 focus:outline-none"
           />
           <button
             type="submit"
-            className="rounded-lg border border-sand-200 bg-white px-4 py-2 text-sm text-ink-600 hover:bg-sand-100 transition-colors"
+            className="rounded-full border border-sand-200 bg-white px-4 py-2 text-sm text-ink-600 hover:bg-sand-100 transition-colors"
           >
             Search
           </button>
@@ -136,7 +136,7 @@ export default function LeadsPageContent({ currentParams }: Props) {
           <select
             value={currentParams.status ?? ""}
             onChange={(event) => updateFilter("status", event.target.value)}
-            className="rounded-lg border border-sand-200 bg-white px-3 py-2 text-sm text-ink-600 focus:border-coffee-500 focus:outline-none focus:ring-1 focus:ring-coffee-500"
+            className="rounded-full border border-sand-200 bg-white px-4 py-2 text-sm text-ink-600 focus:outline-none"
           >
             <option value="">All Statuses</option>
             {Object.values(LeadStatusEnum).map((statusValue) => (
@@ -148,7 +148,7 @@ export default function LeadsPageContent({ currentParams }: Props) {
 
           <button
             onClick={() => setIsCreateModalOpen(true)}
-            className="rounded-lg bg-coffee-500 px-4 py-2 text-sm font-medium text-white hover:bg-coffee-600 transition-colors"
+            className="rounded-full bg-accent px-4 py-2 text-sm font-medium text-white hover:bg-accent-hover transition-colors"
           >
             New Lead
           </button>

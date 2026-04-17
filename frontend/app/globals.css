@@ -11,7 +11,7 @@
   --color-ink-600: #6b6058;
   --color-ink-400: #a09287;
 
-  /* Coffee — accent only */
-  --color-coffee-500: #7c5035;
-  --color-coffee-600: #5c3820;
+  /* Accent — buttons, active states */
+  --color-accent: #18181b;
+  --color-accent-hover: #3f3f46;
 }

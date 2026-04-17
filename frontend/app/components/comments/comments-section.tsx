@@ -32,7 +32,7 @@ export default function CommentsSection({ leadId, initialComments }: Props) {
           rows={3}
           maxLength={500}
           placeholder="Add a comment…"
-          className="w-full rounded-lg border border-sand-200 bg-sand-50 px-3 py-2 text-sm text-ink-900 placeholder-ink-400 focus:border-coffee-500 focus:outline-none focus:ring-1 focus:ring-coffee-500"
+          className="w-full rounded-2xl border border-sand-200 bg-sand-50 px-4 py-2 text-sm text-ink-900 placeholder-ink-400 focus:outline-none"
         />
         <div className="mt-2 flex items-center justify-between">
           <span className="text-xs text-ink-400">{text.length}/500</span>
@@ -41,7 +41,7 @@ export default function CommentsSection({ leadId, initialComments }: Props) {
             <button
               type="submit"
               disabled={isSubmitting || !text.trim()}
-              className="rounded-lg bg-coffee-500 px-4 py-1.5 text-sm font-medium text-white hover:bg-coffee-600 disabled:opacity-50 transition-colors"
+              className="rounded-full bg-accent px-4 py-1.5 text-sm font-medium text-white hover:bg-accent-hover disabled:opacity-50 transition-colors"
             >
               {isSubmitting ? "Posting…" : "Post"}
             </button>
