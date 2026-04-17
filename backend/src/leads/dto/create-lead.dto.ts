@@ -2,9 +2,11 @@ import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
 import {
   IsEmail,
   IsEnum,
+  IsNotEmpty,
   IsNumber,
   IsOptional,
   IsString,
+  MaxLength,
   Min,
 } from "class-validator";
 
@@ -19,6 +21,8 @@ export enum LeadStatus {
 export class CreateLeadDto {
   @ApiProperty({ example: "John Doe" })
   @IsString()
+  @IsNotEmpty()
+  @MaxLength(255)
   name!: string;
 
   @ApiPropertyOptional({ example: "john@example.com" })
@@ -29,6 +33,7 @@ export class CreateLeadDto {
   @ApiPropertyOptional({ example: "Acme Corp" })
   @IsString()
   @IsOptional()
+  @MaxLength(255)
   company?: string;
 
   @ApiPropertyOptional({ enum: LeadStatus, default: LeadStatus.NEW })
@@ -45,5 +50,6 @@ export class CreateLeadDto {
   @ApiPropertyOptional({ example: "Met at conference" })
   @IsString()
   @IsOptional()
+  @MaxLength(2000)
   notes?: string;
 }

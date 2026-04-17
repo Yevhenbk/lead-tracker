@@ -1,5 +1,6 @@
 import { Body, Controller, Get, Param, Post } from "@nestjs/common";
 import {
+  ApiBadRequestResponse,
   ApiCreatedResponse,
   ApiNotFoundResponse,
   ApiOkResponse,
@@ -24,6 +25,7 @@ export class CommentsController {
   @Post()
   @ApiCreatedResponse({ description: "Comment created" })
   @ApiNotFoundResponse({ description: "Lead not found" })
+  @ApiBadRequestResponse({ description: "Invalid input data" })
   create(
     @Param("leadId") leadId: string,
     @Body() createCommentDto: CreateCommentDto,
