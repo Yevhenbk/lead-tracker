@@ -86,10 +86,11 @@ docker compose down -v
 
 ### `backend/.env.example`
 
-| Variable       | Default                                                        | Description                  |
-|----------------|----------------------------------------------------------------|------------------------------|
-| `DATABASE_URL` | `postgresql://postgres:postgres@localhost:5432/lead_tracker`  | Prisma database connection   |
-| `PORT`         | `3001`                                                         | Port the API listens on      |
+| Variable       | Default                                                        | Description                         |
+|----------------|----------------------------------------------------------------|-------------------------------------|
+| `DATABASE_URL` | `postgresql://postgres:postgres@localhost:5432/lead_tracker`  | Prisma database connection string   |
+| `PORT`         | `3001`                                                         | Port the API listens on             |
+| `NODE_ENV`     | `development`                                                  | Runtime environment (`development` / `production`) |
 
 ### `frontend/.env.example`
 
