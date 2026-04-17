@@ -1,5 +1,11 @@
 @import "tailwindcss";
 
+@layer base {
+  button, select, input, textarea, a {
+    cursor: pointer;
+  }
+}
+
 @theme {
   /* Page / surface backgrounds */
   --color-sand-50: #faf8f5;
