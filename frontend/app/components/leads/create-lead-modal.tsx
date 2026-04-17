@@ -28,6 +28,9 @@ const INITIAL_FORM_STATE: FormState = {
   notes: "",
 };
 
+const inputClass =
+  "w-full rounded-lg border border-sand-200 bg-sand-50 px-3 py-2 text-sm text-ink-900 placeholder-ink-400 focus:border-coffee-500 focus:outline-none focus:ring-1 focus:ring-coffee-500";
+
 export default function CreateLeadModal({ onClose, onCreated }: Props) {
   const [formState, setFormState] = useState<FormState>(INITIAL_FORM_STATE);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -37,7 +40,7 @@ export default function CreateLeadModal({ onClose, onCreated }: Props) {
     setFormState((current) => ({ ...current, [field]: value }));
   };
 
-  const handleSubmit = async (event: React.FormEvent): Promise<void> => {
+  const handleSubmit = async (event: { preventDefault(): void }): Promise<void> => {
     event.preventDefault();
     setErrorMessage(null);
 
@@ -87,13 +90,13 @@ export default function CreateLeadModal({ onClose, onCreated }: Props) {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-      <div className="w-full max-w-lg rounded-xl bg-white shadow-xl">
-        <div className="border-b px-6 py-4">
-          <h2 className="text-lg font-semibold">Create New Lead</h2>
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-ink-900/30 p-4 backdrop-blur-sm">
+      <div className="w-full max-w-lg rounded-2xl bg-white shadow-xl">
+        <div className="border-b border-sand-100 px-6 py-4">
+          <h2 className="text-base font-semibold text-ink-900">New Lead</h2>
         </div>
 
-        <form onSubmit={handleSubmit} className="px-6 py-4">
+        <form onSubmit={handleSubmit} className="px-6 py-5">
           {errorMessage && (
             <div className="mb-4 rounded-lg bg-red-50 p-3 text-sm text-red-600">
               {errorMessage}
@@ -102,61 +105,47 @@ export default function CreateLeadModal({ onClose, onCreated }: Props) {
 
           <div className="space-y-4">
             <div>
-              <label className="mb-1 block text-sm font-medium text-gray-700">
-                Name <span className="text-red-500">*</span>
+              <label className="mb-1 block text-xs text-ink-400">
+                Name <span className="text-red-400">*</span>
               </label>
               <input
                 type="text"
                 value={formState.name}
-                onChange={(event) =>
-                  handleFieldChange("name", event.target.value)
-                }
-                className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                onChange={(event) => handleFieldChange("name", event.target.value)}
+                className={inputClass}
                 placeholder="Contact name"
               />
             </div>
 
             <div>
-              <label className="mb-1 block text-sm font-medium text-gray-700">
-                Email
-              </label>
+              <label className="mb-1 block text-xs text-ink-400">Email</label>
               <input
                 type="email"
                 value={formState.email}
-                onChange={(event) =>
-                  handleFieldChange("email", event.target.value)
-                }
-                className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                onChange={(event) => handleFieldChange("email", event.target.value)}
+                className={inputClass}
                 placeholder="email@example.com"
               />
             </div>
 
             <div>
-              <label className="mb-1 block text-sm font-medium text-gray-700">
-                Company
-              </label>
+              <label className="mb-1 block text-xs text-ink-400">Company</label>
               <input
                 type="text"
                 value={formState.company}
-                onChange={(event) =>
-                  handleFieldChange("company", event.target.value)
-                }
-                className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                onChange={(event) => handleFieldChange("company", event.target.value)}
+                className={inputClass}
                 placeholder="Company name"
               />
             </div>
 
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="mb-1 block text-sm font-medium text-gray-700">
-                  Status
-                </label>
+                <label className="mb-1 block text-xs text-ink-400">Status</label>
                 <select
                   value={formState.status}
-                  onChange={(event) =>
-                    handleFieldChange("status", event.target.value)
-                  }
-                  className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  onChange={(event) => handleFieldChange("status", event.target.value)}
+                  className={inputClass}
                 >
                   {Object.values(LeadStatusEnum).map((statusValue) => (
                     <option key={statusValue} value={statusValue}>
@@ -167,53 +156,45 @@ export default function CreateLeadModal({ onClose, onCreated }: Props) {
               </div>
 
               <div>
-                <label className="mb-1 block text-sm font-medium text-gray-700">
-                  Value ($)
-                </label>
+                <label className="mb-1 block text-xs text-ink-400">Value ($)</label>
                 <input
                   type="number"
                   min="0"
                   step="0.01"
                   value={formState.value}
-                  onChange={(event) =>
-                    handleFieldChange("value", event.target.value)
-                  }
-                  className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  onChange={(event) => handleFieldChange("value", event.target.value)}
+                  className={inputClass}
                   placeholder="0.00"
                 />
               </div>
             </div>
 
             <div>
-              <label className="mb-1 block text-sm font-medium text-gray-700">
-                Notes
-              </label>
+              <label className="mb-1 block text-xs text-ink-400">Notes</label>
               <textarea
                 value={formState.notes}
-                onChange={(event) =>
-                  handleFieldChange("notes", event.target.value)
-                }
+                onChange={(event) => handleFieldChange("notes", event.target.value)}
                 rows={3}
-                className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="Additional notes..."
+                className={inputClass}
+                placeholder="Additional notes…"
               />
             </div>
           </div>
 
-          <div className="mt-6 flex justify-end gap-3">
+          <div className="mt-6 flex justify-end gap-2">
             <button
               type="button"
               onClick={onClose}
-              className="rounded-lg border px-4 py-2 text-sm font-medium hover:bg-gray-50"
+              className="rounded-lg border border-sand-200 px-4 py-2 text-sm text-ink-600 hover:bg-sand-100 transition-colors"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={isSubmitting}
-              className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 disabled:opacity-50"
+              className="rounded-lg bg-coffee-500 px-4 py-2 text-sm font-medium text-white hover:bg-coffee-600 disabled:opacity-50 transition-colors"
             >
-              {isSubmitting ? "Creating..." : "Create Lead"}
+              {isSubmitting ? "Creating…" : "Create Lead"}
             </button>
           </div>
         </form>

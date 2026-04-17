@@ -24,11 +24,11 @@ export default function Pagination({ totalPages, currentPage }: Props) {
   }
 
   return (
-    <div className="flex items-center justify-center gap-2 pt-4">
+    <div className="flex items-center gap-1">
       <button
         onClick={() => navigateToPage(currentPage - 1)}
         disabled={currentPage <= 1}
-        className="rounded-lg border px-3 py-2 text-sm disabled:cursor-not-allowed disabled:opacity-50 hover:bg-gray-50"
+        className="rounded-lg border border-sand-200 px-3 py-1.5 text-xs text-ink-600 disabled:cursor-not-allowed disabled:opacity-40 hover:bg-sand-100 transition-colors"
       >
         Previous
       </button>
@@ -38,10 +38,10 @@ export default function Pagination({ totalPages, currentPage }: Props) {
           <button
             key={pageNumber}
             onClick={() => navigateToPage(pageNumber)}
-            className={`rounded-lg border px-3 py-2 text-sm ${
+            className={`rounded-lg border px-3 py-1.5 text-xs transition-colors ${
               pageNumber === currentPage
-                ? "border-blue-600 bg-blue-600 text-white"
-                : "hover:bg-gray-50"
+                ? "border-coffee-500 bg-coffee-500 text-white"
+                : "border-sand-200 text-ink-600 hover:bg-sand-100"
             }`}
           >
             {pageNumber}
@@ -52,7 +52,7 @@ export default function Pagination({ totalPages, currentPage }: Props) {
       <button
         onClick={() => navigateToPage(currentPage + 1)}
         disabled={currentPage >= totalPages}
-        className="rounded-lg border px-3 py-2 text-sm disabled:cursor-not-allowed disabled:opacity-50 hover:bg-gray-50"
+        className="rounded-lg border border-sand-200 px-3 py-1.5 text-xs text-ink-600 disabled:cursor-not-allowed disabled:opacity-40 hover:bg-sand-100 transition-colors"
       >
         Next
       </button>

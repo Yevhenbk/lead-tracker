@@ -20,7 +20,7 @@ export default async function LeadsPage({ searchParams }: Props) {
     <main className="min-h-screen">
       <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900">Leads</h1>
+          <h1 className="text-2xl font-semibold text-ink-900">Leads</h1>
         </div>
         <LeadsPageContent currentParams={resolvedParams} />
       </div>
