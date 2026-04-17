@@ -93,7 +93,7 @@ export default function CreateLeadModal({ onClose, onCreated }: Props) {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-ink-900/30 p-4 backdrop-blur-sm">
-      <div className="w-full max-w-lg rounded-2xl bg-white shadow-xl">
+      <div className="w-full max-w-lg rounded-2xl bg-white shadow-xl max-h-[90vh] overflow-y-auto">
         <div className="border-b border-sand-100 px-6 py-4">
           <h2 className="text-base font-semibold text-ink-900">New Lead</h2>
         </div>
@@ -141,7 +141,7 @@ export default function CreateLeadModal({ onClose, onCreated }: Props) {
               />
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <div>
                 <label className="mb-1 block text-xs text-ink-400">Status</label>
                 <CustomSelect

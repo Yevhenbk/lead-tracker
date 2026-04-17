@@ -24,7 +24,7 @@ function DetailSkeleton() {
     <div>
       <div className="mb-6 h-3.5 w-20 animate-pulse rounded bg-sand-200" />
       <div className="rounded-xl border border-sand-200 bg-white p-6">
-        <div className="mb-6 flex items-start justify-between">
+        <div className="mb-6 flex flex-wrap items-start justify-between gap-3">
           <div className="space-y-2">
             <div className="h-7 w-48 animate-pulse rounded bg-sand-200" />
             <div className="h-5 w-16 animate-pulse rounded-full bg-sand-200" />
@@ -104,7 +104,7 @@ export default function LeadDetailContent({ leadId }: Props) {
       </Link>
 
       <div className="rounded-xl border border-sand-200 bg-white p-6">
-        <div className="mb-6 flex items-start justify-between">
+        <div className="mb-6 flex flex-wrap items-start justify-between gap-3">
           <div>
             {isEditing ? (
               <input

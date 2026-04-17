@@ -25,49 +25,55 @@ interface Props {
 
 function LeadsTableSkeleton() {
   return (
-    <div className="overflow-hidden rounded-xl border border-sand-200 bg-white">
-      <table className="min-w-full divide-y divide-sand-200">
-        <thead className="bg-sand-100">
-          <tr>
-            {["Name", "Company", "Status", "Value", "Comments", "Created"].map(
-              (header) => (
-                <th
-                  key={header}
-                  className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wide text-ink-400"
-                >
+    <>
+      {/* Mobile skeleton */}
+      <div className="space-y-3 sm:hidden">
+        {Array.from({ length: 5 }).map((_, i) => (
+          <div key={i} className="rounded-xl border border-sand-200 bg-white p-4">
+            <div className="flex items-start justify-between">
+              <div className="space-y-1.5">
+                <div className="h-4 w-32 animate-pulse rounded bg-sand-200" />
+                <div className="h-3 w-24 animate-pulse rounded bg-sand-200" />
+              </div>
+              <div className="h-5 w-16 animate-pulse rounded-full bg-sand-200" />
+            </div>
+            <div className="mt-3 flex gap-4">
+              <div className="h-3 w-20 animate-pulse rounded bg-sand-200" />
+              <div className="h-3 w-14 animate-pulse rounded bg-sand-200" />
+            </div>
+          </div>
+        ))}
+      </div>
+      {/* Desktop skeleton */}
+      <div className="hidden overflow-hidden rounded-xl border border-sand-200 bg-white sm:block">
+        <table className="min-w-full divide-y divide-sand-200">
+          <thead className="bg-sand-100">
+            <tr>
+              {["Name", "Company", "Status", "Value", "Comments", "Created"].map((header) => (
+                <th key={header} className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wide text-ink-400">
                   {header}
                 </th>
-              )
-            )}
-          </tr>
-        </thead>
-        <tbody className="divide-y divide-sand-100 bg-white">
-          {Array.from({ length: 5 }).map((_, index) => (
-            <tr key={index}>
-              <td className="px-6 py-4">
-                <div className="h-4 w-32 animate-pulse rounded bg-sand-200" />
-                <div className="mt-1.5 h-3 w-24 animate-pulse rounded bg-sand-100" />
-              </td>
-              <td className="px-6 py-4">
-                <div className="h-4 w-24 animate-pulse rounded bg-sand-200" />
-              </td>
-              <td className="px-6 py-4">
-                <div className="h-5 w-16 animate-pulse rounded-full bg-sand-200" />
-              </td>
-              <td className="px-6 py-4">
-                <div className="h-4 w-16 animate-pulse rounded bg-sand-200" />
-              </td>
-              <td className="px-6 py-4">
-                <div className="h-4 w-6 animate-pulse rounded bg-sand-200" />
-              </td>
-              <td className="px-6 py-4">
-                <div className="h-4 w-20 animate-pulse rounded bg-sand-200" />
-              </td>
+              ))}
             </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
+          </thead>
+          <tbody className="divide-y divide-sand-100 bg-white">
+            {Array.from({ length: 5 }).map((_, index) => (
+              <tr key={index}>
+                <td className="px-6 py-4">
+                  <div className="h-4 w-32 animate-pulse rounded bg-sand-200" />
+                  <div className="mt-1.5 h-3 w-24 animate-pulse rounded bg-sand-100" />
+                </td>
+                <td className="px-6 py-4"><div className="h-4 w-24 animate-pulse rounded bg-sand-200" /></td>
+                <td className="px-6 py-4"><div className="h-5 w-16 animate-pulse rounded-full bg-sand-200" /></td>
+                <td className="px-6 py-4"><div className="h-4 w-16 animate-pulse rounded bg-sand-200" /></td>
+                <td className="px-6 py-4"><div className="h-4 w-6 animate-pulse rounded bg-sand-200" /></td>
+                <td className="px-6 py-4"><div className="h-4 w-20 animate-pulse rounded bg-sand-200" /></td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </>
   );
 }
 
@@ -81,13 +87,7 @@ export default function LeadsPageContent({ currentParams }: Props) {
 
   const updateFilter = (key: string, value: string): void => {
     const params = new URLSearchParams(searchParams.toString());
-
-    if (value) {
-      params.set(key, value);
-    } else {
-      params.delete(key);
-    }
-
+    if (value) { params.set(key, value); } else { params.delete(key); }
     params.delete("page");
     router.push(`/leads?${params.toString()}`);
   };
@@ -104,28 +104,23 @@ export default function LeadsPageContent({ currentParams }: Props) {
 
   return (
     <div>
-      <div className="mb-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+      {/* Toolbar */}
+      <div className="mb-5 flex flex-col gap-3">
         <form onSubmit={handleSearchSubmit} className="flex gap-2">
           <input
             type="text"
             value={searchInput}
             onChange={(event) => setSearchInput(event.target.value)}
             placeholder="Search by name, email, company..."
-            className="w-64 rounded-full border border-sand-200 bg-white px-4 py-2 text-sm text-ink-900 placeholder-ink-400 focus:outline-none"
+            className="min-w-0 flex-1 rounded-full border border-sand-200 bg-white px-4 py-2 text-sm text-ink-900 placeholder-ink-400 focus:outline-none sm:w-64 sm:flex-none"
           />
-          <button
-            type="submit"
-            className="rounded-full border border-sand-200 bg-white px-4 py-2 text-sm text-ink-600 hover:bg-sand-100 transition-colors"
-          >
+          <button type="submit" className="rounded-full border border-sand-200 bg-white px-4 py-2 text-sm text-ink-600 hover:bg-sand-100 transition-colors">
             Search
           </button>
           {currentParams.q && (
             <button
               type="button"
-              onClick={() => {
-                setSearchInput("");
-                updateFilter("q", "");
-              }}
+              onClick={() => { setSearchInput(""); updateFilter("q", ""); }}
               className="px-3 py-2 text-sm text-ink-400 hover:text-ink-600 transition-colors"
             >
               Clear
@@ -133,7 +128,7 @@ export default function LeadsPageContent({ currentParams }: Props) {
           )}
         </form>
 
-        <div className="flex items-center gap-3">
+        <div className="flex items-center justify-between gap-3 sm:justify-end">
           <CustomSelect
             value={currentParams.status ?? ""}
             onChange={(val) => updateFilter("status", val)}
@@ -143,7 +138,6 @@ export default function LeadsPageContent({ currentParams }: Props) {
             ]}
             className="w-40"
           />
-
           <button
             onClick={() => setIsCreateModalOpen(true)}
             className="rounded-full bg-accent px-4 py-2 text-sm font-medium text-white hover:bg-accent-hover transition-colors"
@@ -174,65 +168,75 @@ export default function LeadsPageContent({ currentParams }: Props) {
               </p>
             </div>
           ) : (
-            <div className="overflow-hidden rounded-xl border border-sand-200 bg-white">
-              <table className="min-w-full divide-y divide-sand-200">
-                <thead className="bg-sand-100">
-                  <tr>
-                    {["Name", "Company", "Status", "Value", "Comments", "Created"].map(
-                      (header) => (
-                        <th
-                          key={header}
-                          className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wide text-ink-400"
-                        >
+            <>
+              {/* Mobile: card list */}
+              <div className="space-y-3 sm:hidden">
+                {leadsResponse.data.map((lead: Lead) => (
+                  <div
+                    key={lead.id}
+                    onClick={() => router.push(`/leads/${lead.id}`)}
+                    className="cursor-pointer rounded-xl border border-sand-200 bg-white p-4 transition-colors hover:bg-sand-50"
+                  >
+                    <div className="flex items-start justify-between gap-3">
+                      <div className="min-w-0">
+                        <p className="truncate text-sm font-medium text-ink-900">{lead.name}</p>
+                        {lead.email && <p className="mt-0.5 truncate text-xs text-ink-400">{lead.email}</p>}
+                      </div>
+                      <StatusBadge status={lead.status} />
+                    </div>
+                    <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-ink-400">
+                      {lead.company && <span>{lead.company}</span>}
+                      {lead.value != null && <span>${lead.value.toLocaleString()}</span>}
+                      <span>{new Date(lead.createdAt).toLocaleDateString()}</span>
+                      <span>{lead._count?.comments ?? 0} comment{(lead._count?.comments ?? 0) !== 1 ? "s" : ""}</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Desktop: table */}
+              <div className="hidden overflow-hidden rounded-xl border border-sand-200 bg-white sm:block">
+                <table className="min-w-full divide-y divide-sand-200">
+                  <thead className="bg-sand-100">
+                    <tr>
+                      {["Name", "Company", "Status", "Value", "Comments", "Created"].map((header) => (
+                        <th key={header} className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wide text-ink-400">
                           {header}
                         </th>
-                      )
-                    )}
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-sand-100 bg-white">
-                  {leadsResponse.data.map((lead: Lead) => (
-                    <tr
-                      key={lead.id}
-                      onClick={() => router.push(`/leads/${lead.id}`)}
-                      className="cursor-pointer transition-colors hover:bg-sand-50"
-                    >
-                      <td className="px-6 py-4">
-                        <p className="text-sm font-medium text-ink-900">{lead.name}</p>
-                        {lead.email && (
-                          <p className="mt-0.5 text-xs text-ink-400">{lead.email}</p>
-                        )}
-                      </td>
-                      <td className="px-6 py-4 text-sm text-ink-600">
-                        {lead.company ?? "—"}
-                      </td>
-                      <td className="px-6 py-4">
-                        <StatusBadge status={lead.status} />
-                      </td>
-                      <td className="px-6 py-4 text-sm text-ink-600">
-                        {lead.value != null ? `$${lead.value.toLocaleString()}` : "—"}
-                      </td>
-                      <td className="px-6 py-4 text-sm text-ink-400">
-                        {lead._count?.comments ?? 0}
-                      </td>
-                      <td className="px-6 py-4 text-xs text-ink-400">
-                        {new Date(lead.createdAt).toLocaleDateString()}
-                      </td>
+                      ))}
                     </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+                  </thead>
+                  <tbody className="divide-y divide-sand-100 bg-white">
+                    {leadsResponse.data.map((lead: Lead) => (
+                      <tr
+                        key={lead.id}
+                        onClick={() => router.push(`/leads/${lead.id}`)}
+                        className="cursor-pointer transition-colors hover:bg-sand-50"
+                      >
+                        <td className="px-6 py-4">
+                          <p className="text-sm font-medium text-ink-900">{lead.name}</p>
+                          {lead.email && <p className="mt-0.5 text-xs text-ink-400">{lead.email}</p>}
+                        </td>
+                        <td className="px-6 py-4 text-sm text-ink-600">{lead.company ?? "—"}</td>
+                        <td className="px-6 py-4"><StatusBadge status={lead.status} /></td>
+                        <td className="px-6 py-4 text-sm text-ink-600">
+                          {lead.value != null ? `$${lead.value.toLocaleString()}` : "—"}
+                        </td>
+                        <td className="px-6 py-4 text-sm text-ink-400">{lead._count?.comments ?? 0}</td>
+                        <td className="px-6 py-4 text-xs text-ink-400">
+                          {new Date(lead.createdAt).toLocaleDateString()}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </>
           )}
 
           <div className="mt-4 flex items-center justify-between text-xs text-ink-400">
-            <span>
-              Showing {leadsResponse.data.length} of {leadsResponse.meta.total} leads
-            </span>
-            <Pagination
-              totalPages={leadsResponse.meta.totalPages}
-              currentPage={leadsResponse.meta.page}
-            />
+            <span>Showing {leadsResponse.data.length} of {leadsResponse.meta.total} leads</span>
+            <Pagination totalPages={leadsResponse.meta.totalPages} currentPage={leadsResponse.meta.page} />
           </div>
         </>
       )}

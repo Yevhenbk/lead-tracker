@@ -13,18 +13,19 @@ export default function Pagination({ totalPages, currentPage }: Props) {
 
   const navigateToPage = (page: number): void => {
     const params = new URLSearchParams(searchParams.toString());
-
     params.set("page", String(page));
-
     router.push(`/leads?${params.toString()}`);
   };
 
-  if (totalPages <= 1) {
-    return null;
-  }
+  if (totalPages <= 1) return null;
+
+  const pages = Array.from({ length: totalPages }, (_, i) => i + 1).filter((p) => {
+    if (totalPages <= 5) return true;
+    return p === 1 || p === totalPages || Math.abs(p - currentPage) <= 1;
+  });
 
   return (
-    <div className="flex items-center gap-1">
+    <div className="flex flex-wrap items-center gap-1">
       <button
         onClick={() => navigateToPage(currentPage - 1)}
         disabled={currentPage <= 1}
@@ -33,8 +34,11 @@ export default function Pagination({ totalPages, currentPage }: Props) {
         Previous
       </button>
 
-      {Array.from({ length: totalPages }, (_, index) => index + 1).map(
-        (pageNumber) => (
+      {pages.map((pageNumber, idx) => (
+        <>
+          {idx > 0 && pages[idx - 1] !== pageNumber - 1 && (
+            <span key={`ellipsis-${pageNumber}`} className="px-1 text-xs text-ink-400">…</span>
+          )}
           <button
             key={pageNumber}
             onClick={() => navigateToPage(pageNumber)}
@@ -46,8 +50,8 @@ export default function Pagination({ totalPages, currentPage }: Props) {
           >
             {pageNumber}
           </button>
-        ),
-      )}
+        </>
+      ))}
 
       <button
         onClick={() => navigateToPage(currentPage + 1)}
