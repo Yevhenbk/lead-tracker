@@ -4,6 +4,7 @@ import { useState } from "react";
 
 import type { LeadStatus } from "@models/lead";
 import { LeadStatus as LeadStatusEnum } from "@models/lead";
+import { API_URL } from "@lib/api";
 
 interface Props {
   onClose: () => void;
@@ -62,10 +63,7 @@ export default function CreateLeadModal({ onClose, onCreated }: Props) {
       if (formState.notes.trim()) payload.notes = formState.notes.trim();
       if (formState.value) payload.value = parseFloat(formState.value);
 
-      const apiUrl =
-        process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3001/api";
-
-      const response = await fetch(`${apiUrl}/leads`, {
+      const response = await fetch(`${API_URL}/leads`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),

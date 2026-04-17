@@ -1,12 +1,10 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
 import Link from "next/link";
 
-import type { Lead, LeadStatus } from "@models/lead";
 import { LeadStatus as LeadStatusEnum } from "@models/lead";
-import type { Comment } from "@models/comment";
+import { useLead } from "@hooks/use-lead";
+import { useLeadMutations } from "@hooks/use-lead-mutations";
 import StatusBadge from "@components/ui/status-badge";
 import CommentsSection from "@components/comments/comments-section";
 
@@ -14,14 +12,8 @@ interface Props {
   leadId: string;
 }
 
-interface EditFormState {
-  name: string;
-  email: string;
-  company: string;
-  status: LeadStatus;
-  value: string;
-  notes: string;
-}
+const inputClass =
+  "mt-1 w-full rounded-lg border border-sand-200 bg-sand-50 px-3 py-2 text-sm text-ink-900 focus:border-coffee-500 focus:outline-none focus:ring-1 focus:ring-coffee-500";
 
 function DetailSkeleton() {
   return (
@@ -60,148 +52,20 @@ function DetailSkeleton() {
   );
 }
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3001/api";
-
-const inputClass =
-  "mt-1 w-full rounded-lg border border-sand-200 bg-sand-50 px-3 py-2 text-sm text-ink-900 focus:border-coffee-500 focus:outline-none focus:ring-1 focus:ring-coffee-500";
-
 export default function LeadDetailContent({ leadId }: Props) {
-  const router = useRouter();
-  const [isLoading, setIsLoading] = useState(true);
-  const [lead, setLead] = useState<Lead | null>(null);
-  const [comments, setComments] = useState<Comment[]>([]);
-  const [fetchError, setFetchError] = useState<string | null>(null);
-  const [isEditing, setIsEditing] = useState(false);
-  const [isDeleting, setIsDeleting] = useState(false);
-  const [isSaving, setIsSaving] = useState(false);
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const [editForm, setEditForm] = useState<EditFormState>({
-    name: "",
-    email: "",
-    company: "",
-    status: LeadStatusEnum.NEW,
-    value: "",
-    notes: "",
-  });
-
-  useEffect(() => {
-    setIsLoading(true);
-    setFetchError(null);
-
-    Promise.all([
-      fetch(`${API_URL}/leads/${leadId}`).then((response) => {
-        if (!response.ok) throw new Error("Lead not found");
-
-        return response.json() as Promise<Lead>;
-      }),
-      fetch(`${API_URL}/leads/${leadId}/comments`).then((response) => {
-        if (!response.ok) throw new Error("Failed to load comments");
-
-        return response.json() as Promise<Comment[]>;
-      }),
-    ])
-      .then(([leadData, commentsData]) => {
-        setLead(leadData);
-        setComments(commentsData);
-        setEditForm({
-          name: leadData.name,
-          email: leadData.email ?? "",
-          company: leadData.company ?? "",
-          status: leadData.status,
-          value: leadData.value != null ? String(leadData.value) : "",
-          notes: leadData.notes ?? "",
-        });
-      })
-      .catch((error: unknown) => {
-        setFetchError(
-          error instanceof Error ? error.message : "Failed to load lead"
-        );
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
-  }, [leadId]);
-
-  const handleFieldChange = (
-    field: keyof EditFormState,
-    value: string,
-  ): void => {
-    setEditForm((current) => ({ ...current, [field]: value }));
-  };
-
-  const handleSave = async (): Promise<void> => {
-    setErrorMessage(null);
-
-    if (!editForm.name.trim()) {
-      setErrorMessage("Name is required");
-      return;
-    }
-
-    setIsSaving(true);
-
-    try {
-      const payload: Record<string, unknown> = {
-        name: editForm.name.trim(),
-        status: editForm.status,
-        email: editForm.email.trim() || null,
-        company: editForm.company.trim() || null,
-        notes: editForm.notes.trim() || null,
-        value: editForm.value ? parseFloat(editForm.value) : null,
-      };
-
-      const response = await fetch(`${API_URL}/leads/${lead!.id}`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => null);
-        throw new Error(
-          (errorData as { message?: string } | null)?.message ??
-            "Failed to update lead",
-        );
-      }
-
-      setIsEditing(false);
-      router.refresh();
-    } catch (error) {
-      setErrorMessage(
-        error instanceof Error ? error.message : "An unexpected error occurred",
-      );
-    } finally {
-      setIsSaving(false);
-    }
-  };
-
-  const handleDelete = async (): Promise<void> => {
-    if (
-      !confirm(
-        "Are you sure you want to delete this lead? This action cannot be undone.",
-      )
-    ) {
-      return;
-    }
-
-    setIsDeleting(true);
-
-    try {
-      const response = await fetch(`${API_URL}/leads/${lead!.id}`, {
-        method: "DELETE",
-      });
-
-      if (!response.ok) {
-        throw new Error("Failed to delete lead");
-      }
-
-      router.push("/leads");
-    } catch (error) {
-      setErrorMessage(
-        error instanceof Error ? error.message : "An unexpected error occurred",
-      );
-      setIsDeleting(false);
-    }
-  };
+  const { lead, comments, isLoading, error: fetchError } = useLead(leadId);
+  const {
+    isEditing,
+    setIsEditing,
+    editForm,
+    handleFieldChange,
+    handleSave,
+    isSaving,
+    handleDelete,
+    isDeleting,
+    actionError,
+    clearActionError,
+  } = useLeadMutations(lead);
 
   if (isLoading) {
     return <DetailSkeleton />;
@@ -233,9 +97,7 @@ export default function LeadDetailContent({ leadId }: Props) {
               <input
                 type="text"
                 value={editForm.name}
-                onChange={(event) =>
-                  handleFieldChange("name", event.target.value)
-                }
+                onChange={(e) => handleFieldChange("name", e.target.value)}
                 className="text-xl font-semibold border-b border-sand-200 bg-transparent text-ink-900 focus:border-coffee-500 focus:outline-none pb-0.5"
               />
             ) : (
@@ -250,10 +112,7 @@ export default function LeadDetailContent({ leadId }: Props) {
             {isEditing ? (
               <>
                 <button
-                  onClick={() => {
-                    setIsEditing(false);
-                    setErrorMessage(null);
-                  }}
+                  onClick={() => { setIsEditing(false); clearActionError(); }}
                   className="rounded-lg border border-sand-200 px-3 py-1.5 text-sm text-ink-600 hover:bg-sand-100 transition-colors"
                 >
                   Cancel
@@ -286,9 +145,9 @@ export default function LeadDetailContent({ leadId }: Props) {
           </div>
         </div>
 
-        {errorMessage && (
+        {actionError && (
           <div className="mb-4 rounded-lg bg-red-50 p-3 text-sm text-red-600">
-            {errorMessage}
+            {actionError}
           </div>
         )}
 

@@ -1,10 +1,11 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 
-import type { Lead, LeadListResponse } from "@models/lead";
+import type { Lead } from "@models/lead";
 import { LeadStatus as LeadStatusEnum } from "@models/lead";
+import { useLeads } from "@hooks/use-leads";
 import StatusBadge from "@components/ui/status-badge";
 import Pagination from "@components/ui/pagination";
 import CreateLeadModal from "@components/leads/create-lead-modal";
@@ -20,8 +21,6 @@ interface CurrentParams {
 interface Props {
   currentParams: CurrentParams;
 }
-
-const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3001/api";
 
 function LeadsTableSkeleton() {
   return (
@@ -74,42 +73,10 @@ function LeadsTableSkeleton() {
 export default function LeadsPageContent({ currentParams }: Props) {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const [isLoading, setIsLoading] = useState(true);
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const [leadsResponse, setLeadsResponse] = useState<LeadListResponse | null>(null);
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [searchInput, setSearchInput] = useState(currentParams.q ?? "");
 
-  useEffect(() => {
-    setIsLoading(true);
-    setErrorMessage(null);
-
-    const queryParams = new URLSearchParams();
-
-    if (currentParams.page) queryParams.set("page", currentParams.page);
-    if (currentParams.status) queryParams.set("status", currentParams.status);
-    if (currentParams.q) queryParams.set("q", currentParams.q);
-    if (currentParams.sort) queryParams.set("sort", currentParams.sort);
-    if (currentParams.order) queryParams.set("order", currentParams.order);
-
-    fetch(`${API_URL}/leads?${queryParams.toString()}`)
-      .then((response) => {
-        if (!response.ok) throw new Error("Failed to load leads");
-
-        return response.json() as Promise<LeadListResponse>;
-      })
-      .then((data) => {
-        setLeadsResponse(data);
-      })
-      .catch((error: unknown) => {
-        setErrorMessage(
-          error instanceof Error ? error.message : "Failed to load leads"
-        );
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
-  }, [currentParams.page, currentParams.status, currentParams.q, currentParams.sort, currentParams.order]);
+  const { leadsResponse, isLoading, error } = useLeads(currentParams);
 
   const updateFilter = (key: string, value: string): void => {
     const params = new URLSearchParams(searchParams.toString());
@@ -121,7 +88,6 @@ export default function LeadsPageContent({ currentParams }: Props) {
     }
 
     params.delete("page");
-
     router.push(`/leads?${params.toString()}`);
   };
 
@@ -191,14 +157,14 @@ export default function LeadsPageContent({ currentParams }: Props) {
 
       {isLoading && <LeadsTableSkeleton />}
 
-      {!isLoading && errorMessage && (
+      {!isLoading && error && (
         <div className="rounded-xl border border-red-100 bg-red-50 p-6 text-center">
-          <p className="text-sm text-red-600">{errorMessage}</p>
+          <p className="text-sm text-red-600">{error}</p>
           <p className="mt-1 text-xs text-red-400">Make sure the backend is running.</p>
         </div>
       )}
 
-      {!isLoading && !errorMessage && leadsResponse && (
+      {!isLoading && !error && leadsResponse && (
         <>
           {leadsResponse.data.length === 0 ? (
             <div className="rounded-xl border border-dashed border-sand-200 py-16 text-center">
