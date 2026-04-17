@@ -24,43 +24,38 @@ function DetailSkeleton() {
     <div>
       <div className="mb-6 h-3.5 w-20 animate-pulse rounded bg-sand-200" />
       <div className="rounded-xl border border-sand-200 bg-white p-6">
-        {/* Header */}
         <div className="mb-6 flex items-start justify-between">
           <div className="space-y-2">
             <div className="h-7 w-48 animate-pulse rounded bg-sand-200" />
-            <div className="h-5 w-16 animate-pulse rounded-full bg-sand-100" />
+            <div className="h-5 w-16 animate-pulse rounded-full bg-sand-200" />
           </div>
           <div className="flex gap-2">
             <div className="h-8 w-14 animate-pulse rounded-lg bg-sand-200" />
             <div className="h-8 w-16 animate-pulse rounded-lg bg-sand-200" />
           </div>
         </div>
-        {/* Fields grid — mirrors actual gap-5 sm:grid-cols-2 */}
         <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
           {Array.from({ length: 4 }).map((_, index) => (
             <div key={index}>
               <div className="h-3 w-14 animate-pulse rounded bg-sand-200" />
-              <div className="mt-1 h-5 w-full animate-pulse rounded bg-sand-100" />
+              <div className="mt-1 h-5 w-full animate-pulse rounded bg-sand-200" />
             </div>
           ))}
-          {/* Notes — full width, taller to suggest multiline */}
           <div className="sm:col-span-2">
             <div className="h-3 w-10 animate-pulse rounded bg-sand-200" />
-            <div className="mt-1 h-12 w-full animate-pulse rounded bg-sand-100" />
+            <div className="mt-1 h-12 w-full animate-pulse rounded bg-sand-200" />
           </div>
         </div>
-        {/* Footer — created/updated timestamps */}
         <div className="mt-6 border-t border-sand-100 pt-4 flex gap-6">
           <div className="h-3 w-36 animate-pulse rounded bg-sand-200" />
           <div className="h-3 w-36 animate-pulse rounded bg-sand-200" />
         </div>
       </div>
-      {/* Comments section */}
       <div className="mt-6 rounded-xl border border-sand-200 bg-white p-6">
         <div className="mb-5 h-5 w-28 animate-pulse rounded bg-sand-200" />
-        <div className="mb-6 h-20 w-full animate-pulse rounded-2xl bg-sand-100" />
+        <div className="mb-6 h-20 w-full animate-pulse rounded-2xl bg-sand-200" />
         {Array.from({ length: 2 }).map((_, index) => (
-          <div key={index} className="mb-3 rounded-lg bg-sand-100 p-4">
+          <div key={index} className="mb-3 rounded-lg bg-sand-200 p-4">
             <div className="h-4 w-full animate-pulse rounded bg-sand-200" />
             <div className="mt-2 h-3 w-24 animate-pulse rounded bg-sand-200" />
           </div>
