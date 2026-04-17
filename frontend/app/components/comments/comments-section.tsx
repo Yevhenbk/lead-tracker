@@ -41,7 +41,7 @@ export default function CommentsSection({ leadId, initialComments }: Props) {
             <button
               type="submit"
               disabled={isSubmitting || !text.trim()}
-              className="rounded-full bg-accent px-4 py-1.5 text-sm font-medium text-white hover:bg-accent-hover disabled:opacity-50 transition-colors"
+              className="rounded-lg bg-accent px-4 py-1.5 text-sm font-medium text-white hover:bg-accent-hover disabled:opacity-50 transition-colors"
             >
               {isSubmitting ? "Posting…" : "Post"}
             </button>

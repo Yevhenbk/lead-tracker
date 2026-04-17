@@ -181,14 +181,14 @@ export default function CreateLeadModal({ onClose, onCreated }: Props) {
             <button
               type="button"
               onClick={onClose}
-              className="rounded-full border border-sand-200 px-4 py-2 text-sm text-ink-600 hover:bg-sand-100 transition-colors"
+              className="rounded-lg border border-sand-200 px-4 py-2 text-sm text-ink-600 hover:bg-sand-100 transition-colors"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={isSubmitting}
-              className="rounded-full bg-accent px-4 py-2 text-sm font-medium text-white hover:bg-accent-hover disabled:opacity-50 transition-colors"
+              className="rounded-lg bg-accent px-4 py-2 text-sm font-medium text-white hover:bg-accent-hover disabled:opacity-50 transition-colors"
             >
               {isSubmitting ? "Creating…" : "Create Lead"}
             </button>

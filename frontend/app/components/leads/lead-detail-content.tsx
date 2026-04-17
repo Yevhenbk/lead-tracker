@@ -117,14 +117,14 @@ export default function LeadDetailContent({ leadId }: Props) {
               <>
                 <button
                   onClick={() => { setIsEditing(false); clearActionError(); }}
-                  className="rounded-full border border-sand-200 px-3 py-1.5 text-sm text-ink-600 hover:bg-sand-100 transition-colors"
+                  className="rounded-lg border border-sand-200 px-3 py-1.5 text-sm text-ink-600 hover:bg-sand-100 transition-colors"
                 >
                   Cancel
                 </button>
                 <button
                   onClick={handleSave}
                   disabled={isSaving}
-                  className="rounded-full bg-accent px-3 py-1.5 text-sm font-medium text-white hover:bg-accent-hover disabled:opacity-50 transition-colors"
+                  className="rounded-lg bg-accent px-3 py-1.5 text-sm font-medium text-white hover:bg-accent-hover disabled:opacity-50 transition-colors"
                 >
                   {isSaving ? "Saving…" : "Save"}
                 </button>
@@ -133,14 +133,14 @@ export default function LeadDetailContent({ leadId }: Props) {
               <>
                 <button
                   onClick={() => setIsEditing(true)}
-                  className="rounded-full border border-sand-200 px-3 py-1.5 text-sm text-ink-600 hover:bg-sand-100 transition-colors"
+                  className="rounded-lg border border-sand-200 px-3 py-1.5 text-sm text-ink-600 hover:bg-sand-100 transition-colors"
                 >
                   Edit
                 </button>
                 <button
                   onClick={handleDelete}
                   disabled={isDeleting}
-                  className="rounded-full border border-red-100 px-3 py-1.5 text-sm text-red-500 hover:bg-red-50 disabled:opacity-50 transition-colors"
+                  className="rounded-lg border border-red-100 px-3 py-1.5 text-sm text-red-500 hover:bg-red-50 disabled:opacity-50 transition-colors"
                 >
                   {isDeleting ? "Deleting…" : "Delete"}
                 </button>
