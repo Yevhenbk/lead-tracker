@@ -25,9 +25,7 @@ yarn-debug.log*
 yarn-error.log*
 
 # editors
-.vscode/*
-!.vscode/settings.json
-!.vscode/extensions.json
+.vscode/
 .idea/
 
 # TypeScript
