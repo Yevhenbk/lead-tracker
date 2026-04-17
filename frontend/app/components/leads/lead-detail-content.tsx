@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 
@@ -11,8 +11,7 @@ import StatusBadge from "@components/ui/status-badge";
 import CommentsSection from "@components/comments/comments-section";
 
 interface Props {
-  lead: Lead;
-  initialComments: Comment[];
+  leadId: string;
 }
 
 interface EditFormState {
@@ -24,23 +23,101 @@ interface EditFormState {
   notes: string;
 }
 
-export default function LeadDetailContent({ lead, initialComments }: Props) {
+function DetailSkeleton() {
+  return (
+    <div>
+      <div className="mb-6 h-4 w-24 animate-pulse rounded bg-gray-200" />
+      <div className="rounded-xl border bg-white p-6 shadow-sm">
+        <div className="mb-6 flex items-start justify-between">
+          <div className="space-y-2">
+            <div className="h-8 w-48 animate-pulse rounded bg-gray-200" />
+            <div className="h-5 w-16 animate-pulse rounded-full bg-gray-200" />
+          </div>
+          <div className="flex gap-2">
+            <div className="h-9 w-16 animate-pulse rounded bg-gray-200" />
+            <div className="h-9 w-16 animate-pulse rounded bg-gray-200" />
+          </div>
+        </div>
+        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+          {Array.from({ length: 5 }).map((_, index) => (
+            <div key={index} className={index === 4 ? "sm:col-span-2" : ""}>
+              <div className="h-3 w-16 animate-pulse rounded bg-gray-200" />
+              <div className="mt-2 h-5 w-40 animate-pulse rounded bg-gray-100" />
+            </div>
+          ))}
+        </div>
+      </div>
+      <div className="mt-8 rounded-xl border bg-white p-6 shadow-sm">
+        <div className="mb-6 h-6 w-32 animate-pulse rounded bg-gray-200" />
+        {Array.from({ length: 2 }).map((_, index) => (
+          <div key={index} className="mb-4 rounded-lg bg-gray-50 p-4">
+            <div className="h-4 w-full animate-pulse rounded bg-gray-200" />
+            <div className="mt-2 h-3 w-24 animate-pulse rounded bg-gray-100" />
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3001/api";
+
+export default function LeadDetailContent({ leadId }: Props) {
   const router = useRouter();
+  const [isLoading, setIsLoading] = useState(true);
+  const [lead, setLead] = useState<Lead | null>(null);
+  const [comments, setComments] = useState<Comment[]>([]);
+  const [fetchError, setFetchError] = useState<string | null>(null);
   const [isEditing, setIsEditing] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [editForm, setEditForm] = useState<EditFormState>({
-    name: lead.name,
-    email: lead.email ?? "",
-    company: lead.company ?? "",
-    status: lead.status,
-    value: lead.value != null ? String(lead.value) : "",
-    notes: lead.notes ?? "",
+    name: "",
+    email: "",
+    company: "",
+    status: LeadStatusEnum.NEW,
+    value: "",
+    notes: "",
   });
 
-  const apiUrl =
-    process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3001/api";
+  useEffect(() => {
+    setIsLoading(true);
+    setFetchError(null);
+
+    Promise.all([
+      fetch(`${API_URL}/leads/${leadId}`).then((response) => {
+        if (!response.ok) throw new Error("Lead not found");
+
+        return response.json() as Promise<Lead>;
+      }),
+      fetch(`${API_URL}/leads/${leadId}/comments`).then((response) => {
+        if (!response.ok) throw new Error("Failed to load comments");
+
+        return response.json() as Promise<Comment[]>;
+      }),
+    ])
+      .then(([leadData, commentsData]) => {
+        setLead(leadData);
+        setComments(commentsData);
+        setEditForm({
+          name: leadData.name,
+          email: leadData.email ?? "",
+          company: leadData.company ?? "",
+          status: leadData.status,
+          value: leadData.value != null ? String(leadData.value) : "",
+          notes: leadData.notes ?? "",
+        });
+      })
+      .catch((error: unknown) => {
+        setFetchError(
+          error instanceof Error ? error.message : "Failed to load lead"
+        );
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  }, [leadId]);
 
   const handleFieldChange = (
     field: keyof EditFormState,
@@ -69,7 +146,7 @@ export default function LeadDetailContent({ lead, initialComments }: Props) {
         value: editForm.value ? parseFloat(editForm.value) : null,
       };
 
-      const response = await fetch(`${apiUrl}/leads/${lead.id}`, {
+      const response = await fetch(`${API_URL}/leads/${lead!.id}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
@@ -106,7 +183,7 @@ export default function LeadDetailContent({ lead, initialComments }: Props) {
     setIsDeleting(true);
 
     try {
-      const response = await fetch(`${apiUrl}/leads/${lead.id}`, {
+      const response = await fetch(`${API_URL}/leads/${lead!.id}`, {
         method: "DELETE",
       });
 
@@ -122,6 +199,23 @@ export default function LeadDetailContent({ lead, initialComments }: Props) {
       setIsDeleting(false);
     }
   };
+
+  if (isLoading) {
+    return <DetailSkeleton />;
+  }
+
+  if (fetchError || !lead) {
+    return (
+      <div>
+        <Link href="/leads" className="mb-6 block text-sm text-gray-500 hover:text-gray-700">
+          ← Back to Leads
+        </Link>
+        <div className="rounded-lg border border-red-200 bg-red-50 p-6 text-center">
+          <p className="text-red-600">{fetchError ?? "Lead not found"}</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div>
@@ -319,7 +413,7 @@ export default function LeadDetailContent({ lead, initialComments }: Props) {
       </div>
 
       <div className="mt-8">
-        <CommentsSection leadId={lead.id} initialComments={initialComments} />
+        <CommentsSection leadId={lead.id} initialComments={comments} />
       </div>
     </div>
   );
