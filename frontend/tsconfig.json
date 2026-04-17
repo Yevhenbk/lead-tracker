@@ -17,27 +17,13 @@
     "isolatedModules": true,
     "jsx": "preserve",
     "incremental": true,
-    "baseUrl": ".",
-    "ignoreDeprecations": "5.0",
     "paths": {
-      "@/*": [
-        "./*"
-      ],
-      "@models/*": [
-        "app/models/*"
-      ],
-      "@services/*": [
-        "app/services/*"
-      ],
-      "@components/*": [
-        "app/components/*"
-      ],
-      "@hooks/*": [
-        "app/hooks/*"
-      ],
-      "@lib/*": [
-        "app/lib/*"
-      ]
+      "@/*": ["./*"],
+      "@models/*": ["./app/models/*"],
+      "@services/*": ["./app/services/*"],
+      "@components/*": ["./app/components/*"],
+      "@hooks/*": ["./app/hooks/*"],
+      "@lib/*": ["./app/lib/*"]
     },
     "plugins": [
       {
