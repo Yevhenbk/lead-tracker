@@ -5,6 +5,7 @@ import { useState } from "react";
 import type { LeadStatus } from "@models/lead";
 import { LeadStatus as LeadStatusEnum } from "@models/lead";
 import { API_URL } from "@lib/api";
+import CustomSelect from "@components/ui/custom-select";
 
 interface Props {
   onClose: () => void;
@@ -143,17 +144,11 @@ export default function CreateLeadModal({ onClose, onCreated }: Props) {
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <label className="mb-1 block text-xs text-ink-400">Status</label>
-                <select
+                <CustomSelect
                   value={formState.status}
-                  onChange={(event) => handleFieldChange("status", event.target.value)}
-                  className={`${inputClass} pr-8`}
-                >
-                  {Object.values(LeadStatusEnum).map((statusValue) => (
-                    <option key={statusValue} value={statusValue}>
-                      {statusValue.replace("_", " ")}
-                    </option>
-                  ))}
-                </select>
+                  onChange={(val) => handleFieldChange("status", val)}
+                  options={Object.values(LeadStatusEnum).map((s) => ({ value: s, label: s.replace("_", " ") }))}
+                />
               </div>
 
               <div>

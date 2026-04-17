@@ -7,6 +7,7 @@ import { useLead } from "@hooks/use-lead";
 import { useLeadMutations } from "@hooks/use-lead-mutations";
 import StatusBadge from "@components/ui/status-badge";
 import CommentsSection from "@components/comments/comments-section";
+import CustomSelect from "@components/ui/custom-select";
 
 interface Props {
   leadId: string;
@@ -176,11 +177,12 @@ export default function LeadDetailContent({ leadId }: Props) {
           <div>
             <p className="text-xs text-ink-400">Status</p>
             {isEditing ? (
-              <select value={editForm.status} onChange={(e) => handleFieldChange("status", e.target.value)} className={`${inputClass} pr-8`}>
-                {Object.values(LeadStatusEnum).map((s) => (
-                  <option key={s} value={s}>{s.replace("_", " ")}</option>
-                ))}
-              </select>
+              <CustomSelect
+                value={editForm.status}
+                onChange={(val) => handleFieldChange("status", val)}
+                options={Object.values(LeadStatusEnum).map((s) => ({ value: s, label: s.replace("_", " ") }))}
+                className="mt-1"
+              />
             ) : (
               <p className="mt-1 text-sm text-ink-900">{lead.status.replace("_", " ")}</p>
             )}

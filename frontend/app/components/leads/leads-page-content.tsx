@@ -9,6 +9,7 @@ import { useLeads } from "@hooks/use-leads";
 import StatusBadge from "@components/ui/status-badge";
 import Pagination from "@components/ui/pagination";
 import CreateLeadModal from "@components/leads/create-lead-modal";
+import CustomSelect from "@components/ui/custom-select";
 
 interface CurrentParams {
   page?: string;
@@ -133,18 +134,14 @@ export default function LeadsPageContent({ currentParams }: Props) {
         </form>
 
         <div className="flex items-center gap-3">
-          <select
+          <CustomSelect
             value={currentParams.status ?? ""}
-            onChange={(event) => updateFilter("status", event.target.value)}
-            className="rounded-full border border-sand-200 bg-white px-4 py-2 pr-8 text-sm text-ink-600 focus:outline-none"
-          >
-            <option value="">All Statuses</option>
-            {Object.values(LeadStatusEnum).map((statusValue) => (
-              <option key={statusValue} value={statusValue}>
-                {statusValue.replace("_", " ")}
-              </option>
-            ))}
-          </select>
+            onChange={(val) => updateFilter("status", val)}
+            options={[
+              { value: "", label: "All Statuses" },
+              ...Object.values(LeadStatusEnum).map((s) => ({ value: s, label: s.replace("_", " ") })),
+            ]}
+          />
 
           <button
             onClick={() => setIsCreateModalOpen(true)}
