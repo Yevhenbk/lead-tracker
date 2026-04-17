@@ -28,7 +28,7 @@ export default function Pagination({ totalPages, currentPage }: Props) {
       <button
         onClick={() => navigateToPage(currentPage - 1)}
         disabled={currentPage <= 1}
-        className="rounded-full border border-sand-200 px-3 py-1.5 text-xs text-ink-600 disabled:cursor-not-allowed disabled:opacity-40 hover:bg-sand-100 transition-colors"
+        className="rounded-lg border border-sand-200 px-3 py-1.5 text-xs text-ink-600 disabled:cursor-not-allowed disabled:opacity-40 hover:bg-sand-100 transition-colors"
       >
         Previous
       </button>
@@ -52,7 +52,7 @@ export default function Pagination({ totalPages, currentPage }: Props) {
       <button
         onClick={() => navigateToPage(currentPage + 1)}
         disabled={currentPage >= totalPages}
-        className="rounded-full border border-sand-200 px-3 py-1.5 text-xs text-ink-600 disabled:cursor-not-allowed disabled:opacity-40 hover:bg-sand-100 transition-colors"
+        className="rounded-lg border border-sand-200 px-3 py-1.5 text-xs text-ink-600 disabled:cursor-not-allowed disabled:opacity-40 hover:bg-sand-100 transition-colors"
       >
         Next
       </button>
