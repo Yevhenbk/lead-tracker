@@ -1,0 +1,284 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+
+import type { Lead, LeadListResponse } from "@models/lead";
+import { LeadStatus as LeadStatusEnum } from "@models/lead";
+import StatusBadge from "@components/ui/status-badge";
+import Pagination from "@components/ui/pagination";
+import CreateLeadModal from "@components/leads/create-lead-modal";
+
+interface CurrentParams {
+  page?: string;
+  status?: string;
+  q?: string;
+  sort?: string;
+  order?: string;
+}
+
+interface Props {
+  currentParams: CurrentParams;
+}
+
+const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3001/api";
+
+function LeadsTableSkeleton() {
+  return (
+    <div className="overflow-hidden rounded-xl border border-sand-200 bg-white">
+      <table className="min-w-full divide-y divide-sand-200">
+        <thead className="bg-sand-100">
+          <tr>
+            {["Name", "Company", "Status", "Value", "Comments", "Created"].map(
+              (header) => (
+                <th
+                  key={header}
+                  className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wide text-ink-400"
+                >
+                  {header}
+                </th>
+              )
+            )}
+          </tr>
+        </thead>
+        <tbody className="divide-y divide-sand-100 bg-white">
+          {Array.from({ length: 5 }).map((_, index) => (
+            <tr key={index}>
+              <td className="px-6 py-4">
+                <div className="h-4 w-32 animate-pulse rounded bg-sand-200" />
+                <div className="mt-1.5 h-3 w-24 animate-pulse rounded bg-sand-100" />
+              </td>
+              <td className="px-6 py-4">
+                <div className="h-4 w-24 animate-pulse rounded bg-sand-200" />
+              </td>
+              <td className="px-6 py-4">
+                <div className="h-5 w-16 animate-pulse rounded-full bg-sand-200" />
+              </td>
+              <td className="px-6 py-4">
+                <div className="h-4 w-16 animate-pulse rounded bg-sand-200" />
+              </td>
+              <td className="px-6 py-4">
+                <div className="h-4 w-6 animate-pulse rounded bg-sand-200" />
+              </td>
+              <td className="px-6 py-4">
+                <div className="h-4 w-20 animate-pulse rounded bg-sand-200" />
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
+export default function LeadsPageContent({ currentParams }: Props) {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const [isLoading, setIsLoading] = useState(true);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [leadsResponse, setLeadsResponse] = useState<LeadListResponse | null>(null);
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [searchInput, setSearchInput] = useState(currentParams.q ?? "");
+
+  useEffect(() => {
+    setIsLoading(true);
+    setErrorMessage(null);
+
+    const queryParams = new URLSearchParams();
+
+    if (currentParams.page) queryParams.set("page", currentParams.page);
+    if (currentParams.status) queryParams.set("status", currentParams.status);
+    if (currentParams.q) queryParams.set("q", currentParams.q);
+    if (currentParams.sort) queryParams.set("sort", currentParams.sort);
+    if (currentParams.order) queryParams.set("order", currentParams.order);
+
+    fetch(`${API_URL}/leads?${queryParams.toString()}`)
+      .then((response) => {
+        if (!response.ok) throw new Error("Failed to load leads");
+
+        return response.json() as Promise<LeadListResponse>;
+      })
+      .then((data) => {
+        setLeadsResponse(data);
+      })
+      .catch((error: unknown) => {
+        setErrorMessage(
+          error instanceof Error ? error.message : "Failed to load leads"
+        );
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  }, [currentParams.page, currentParams.status, currentParams.q, currentParams.sort, currentParams.order]);
+
+  const updateFilter = (key: string, value: string): void => {
+    const params = new URLSearchParams(searchParams.toString());
+
+    if (value) {
+      params.set(key, value);
+    } else {
+      params.delete(key);
+    }
+
+    params.delete("page");
+
+    router.push(`/leads?${params.toString()}`);
+  };
+
+  const handleSearchSubmit = (event: { preventDefault(): void }): void => {
+    event.preventDefault();
+    updateFilter("q", searchInput);
+  };
+
+  const handleLeadCreated = (): void => {
+    setIsCreateModalOpen(false);
+    router.refresh();
+  };
+
+  return (
+    <div>
+      <div className="mb-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <form onSubmit={handleSearchSubmit} className="flex gap-2">
+          <input
+            type="text"
+            value={searchInput}
+            onChange={(event) => setSearchInput(event.target.value)}
+            placeholder="Search by name, email, company..."
+            className="w-64 rounded-lg border border-sand-200 bg-white px-3 py-2 text-sm text-ink-900 placeholder-ink-400 focus:border-coffee-500 focus:outline-none focus:ring-1 focus:ring-coffee-500"
+          />
+          <button
+            type="submit"
+            className="rounded-lg border border-sand-200 bg-white px-4 py-2 text-sm text-ink-600 hover:bg-sand-100 transition-colors"
+          >
+            Search
+          </button>
+          {currentParams.q && (
+            <button
+              type="button"
+              onClick={() => {
+                setSearchInput("");
+                updateFilter("q", "");
+              }}
+              className="px-3 py-2 text-sm text-ink-400 hover:text-ink-600 transition-colors"
+            >
+              Clear
+            </button>
+          )}
+        </form>
+
+        <div className="flex items-center gap-3">
+          <select
+            value={currentParams.status ?? ""}
+            onChange={(event) => updateFilter("status", event.target.value)}
+            className="rounded-lg border border-sand-200 bg-white px-3 py-2 text-sm text-ink-600 focus:border-coffee-500 focus:outline-none focus:ring-1 focus:ring-coffee-500"
+          >
+            <option value="">All Statuses</option>
+            {Object.values(LeadStatusEnum).map((statusValue) => (
+              <option key={statusValue} value={statusValue}>
+                {statusValue.replace("_", " ")}
+              </option>
+            ))}
+          </select>
+
+          <button
+            onClick={() => setIsCreateModalOpen(true)}
+            className="rounded-lg bg-coffee-500 px-4 py-2 text-sm font-medium text-white hover:bg-coffee-600 transition-colors"
+          >
+            New Lead
+          </button>
+        </div>
+      </div>
+
+      {isLoading && <LeadsTableSkeleton />}
+
+      {!isLoading && errorMessage && (
+        <div className="rounded-xl border border-red-100 bg-red-50 p-6 text-center">
+          <p className="text-sm text-red-600">{errorMessage}</p>
+          <p className="mt-1 text-xs text-red-400">Make sure the backend is running.</p>
+        </div>
+      )}
+
+      {!isLoading && !errorMessage && leadsResponse && (
+        <>
+          {leadsResponse.data.length === 0 ? (
+            <div className="rounded-xl border border-dashed border-sand-200 py-16 text-center">
+              <p className="text-sm font-medium text-ink-600">No leads found</p>
+              <p className="mt-1 text-xs text-ink-400">
+                {currentParams.q || currentParams.status
+                  ? "Try adjusting your search or filter"
+                  : "Create your first lead to get started"}
+              </p>
+            </div>
+          ) : (
+            <div className="overflow-hidden rounded-xl border border-sand-200 bg-white">
+              <table className="min-w-full divide-y divide-sand-200">
+                <thead className="bg-sand-100">
+                  <tr>
+                    {["Name", "Company", "Status", "Value", "Comments", "Created"].map(
+                      (header) => (
+                        <th
+                          key={header}
+                          className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wide text-ink-400"
+                        >
+                          {header}
+                        </th>
+                      )
+                    )}
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-sand-100 bg-white">
+                  {leadsResponse.data.map((lead: Lead) => (
+                    <tr
+                      key={lead.id}
+                      onClick={() => router.push(`/leads/${lead.id}`)}
+                      className="cursor-pointer transition-colors hover:bg-sand-50"
+                    >
+                      <td className="px-6 py-4">
+                        <p className="text-sm font-medium text-ink-900">{lead.name}</p>
+                        {lead.email && (
+                          <p className="mt-0.5 text-xs text-ink-400">{lead.email}</p>
+                        )}
+                      </td>
+                      <td className="px-6 py-4 text-sm text-ink-600">
+                        {lead.company ?? "—"}
+                      </td>
+                      <td className="px-6 py-4">
+                        <StatusBadge status={lead.status} />
+                      </td>
+                      <td className="px-6 py-4 text-sm text-ink-600">
+                        {lead.value != null ? `$${lead.value.toLocaleString()}` : "—"}
+                      </td>
+                      <td className="px-6 py-4 text-sm text-ink-400">
+                        {lead._count?.comments ?? 0}
+                      </td>
+                      <td className="px-6 py-4 text-xs text-ink-400">
+                        {new Date(lead.createdAt).toLocaleDateString()}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+
+          <div className="mt-4 flex items-center justify-between text-xs text-ink-400">
+            <span>
+              Showing {leadsResponse.data.length} of {leadsResponse.meta.total} leads
+            </span>
+            <Pagination
+              totalPages={leadsResponse.meta.totalPages}
+              currentPage={leadsResponse.meta.page}
+            />
+          </div>
+        </>
+      )}
+
+      {isCreateModalOpen && (
+        <CreateLeadModal
+          onClose={() => setIsCreateModalOpen(false)}
+          onCreated={handleLeadCreated}
+        />
+      )}
+    </div>
+  );
+}
