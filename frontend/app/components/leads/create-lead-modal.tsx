@@ -146,7 +146,7 @@ export default function CreateLeadModal({ onClose, onCreated }: Props) {
                 <select
                   value={formState.status}
                   onChange={(event) => handleFieldChange("status", event.target.value)}
-                  className={inputClass}
+                  className={`${inputClass} pr-8`}
                 >
                   {Object.values(LeadStatusEnum).map((statusValue) => (
                     <option key={statusValue} value={statusValue}>

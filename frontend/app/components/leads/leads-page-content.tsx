@@ -136,7 +136,7 @@ export default function LeadsPageContent({ currentParams }: Props) {
           <select
             value={currentParams.status ?? ""}
             onChange={(event) => updateFilter("status", event.target.value)}
-            className="rounded-full border border-sand-200 bg-white px-4 py-2 text-sm text-ink-600 focus:outline-none"
+            className="rounded-full border border-sand-200 bg-white px-4 py-2 pr-8 text-sm text-ink-600 focus:outline-none"
           >
             <option value="">All Statuses</option>
             {Object.values(LeadStatusEnum).map((statusValue) => (

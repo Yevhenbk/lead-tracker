@@ -176,7 +176,7 @@ export default function LeadDetailContent({ leadId }: Props) {
           <div>
             <p className="text-xs text-ink-400">Status</p>
             {isEditing ? (
-              <select value={editForm.status} onChange={(e) => handleFieldChange("status", e.target.value)} className={inputClass}>
+              <select value={editForm.status} onChange={(e) => handleFieldChange("status", e.target.value)} className={`${inputClass} pr-8`}>
                 {Object.values(LeadStatusEnum).map((s) => (
                   <option key={s} value={s}>{s.replace("_", " ")}</option>
                 ))}
