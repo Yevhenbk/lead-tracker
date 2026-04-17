@@ -141,6 +141,7 @@ export default function LeadsPageContent({ currentParams }: Props) {
               { value: "", label: "All Statuses" },
               ...Object.values(LeadStatusEnum).map((s) => ({ value: s, label: s.replace("_", " ") })),
             ]}
+            className="w-40"
           />
 
           <button
