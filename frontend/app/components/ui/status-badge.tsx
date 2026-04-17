@@ -5,14 +5,11 @@ interface Props {
 }
 
 const statusConfig: Record<LeadStatus, { label: string; className: string }> = {
-  NEW: { label: "New", className: "bg-blue-100 text-blue-800" },
-  CONTACTED: { label: "Contacted", className: "bg-yellow-100 text-yellow-800" },
-  IN_PROGRESS: {
-    label: "In Progress",
-    className: "bg-purple-100 text-purple-800",
-  },
-  WON: { label: "Won", className: "bg-green-100 text-green-800" },
-  LOST: { label: "Lost", className: "bg-red-100 text-red-800" },
+  NEW: { label: "New", className: "bg-sky-100 text-sky-700" },
+  CONTACTED: { label: "Contacted", className: "bg-amber-100 text-amber-700" },
+  IN_PROGRESS: { label: "In Progress", className: "bg-violet-100 text-violet-700" },
+  WON: { label: "Won", className: "bg-emerald-100 text-emerald-700" },
+  LOST: { label: "Lost", className: "bg-rose-100 text-rose-600" },
 };
 
 export default function StatusBadge({ status }: Props) {

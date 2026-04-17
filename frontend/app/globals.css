@@ -1,1 +1,17 @@
 @import "tailwindcss";
+
+@theme {
+  /* Page / surface backgrounds */
+  --color-sand-50: #faf8f5;
+  --color-sand-100: #f4efe8;
+  --color-sand-200: #e8dfd5;
+
+  /* Text — warm grays, not browns */
+  --color-ink-900: #1e1a17;
+  --color-ink-600: #6b6058;
+  --color-ink-400: #a09287;
+
+  /* Coffee — accent only */
+  --color-coffee-500: #7c5035;
+  --color-coffee-600: #5c3820;
+}

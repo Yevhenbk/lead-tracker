@@ -25,15 +25,15 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3001/api";
 
 function LeadsTableSkeleton() {
   return (
-    <div className="overflow-hidden rounded-lg border bg-white shadow-sm">
-      <table className="min-w-full divide-y divide-gray-200">
-        <thead className="bg-gray-50">
+    <div className="overflow-hidden rounded-xl border border-sand-200 bg-white">
+      <table className="min-w-full divide-y divide-sand-200">
+        <thead className="bg-sand-100">
           <tr>
             {["Name", "Company", "Status", "Value", "Comments", "Created"].map(
               (header) => (
                 <th
                   key={header}
-                  className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
+                  className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wide text-ink-400"
                 >
                   {header}
                 </th>
@@ -41,27 +41,27 @@ function LeadsTableSkeleton() {
             )}
           </tr>
         </thead>
-        <tbody className="divide-y divide-gray-200 bg-white">
+        <tbody className="divide-y divide-sand-100 bg-white">
           {Array.from({ length: 5 }).map((_, index) => (
             <tr key={index}>
               <td className="px-6 py-4">
-                <div className="h-4 w-32 animate-pulse rounded bg-gray-200" />
-                <div className="mt-1 h-3 w-24 animate-pulse rounded bg-gray-100" />
+                <div className="h-4 w-32 animate-pulse rounded bg-sand-200" />
+                <div className="mt-1.5 h-3 w-24 animate-pulse rounded bg-sand-100" />
               </td>
               <td className="px-6 py-4">
-                <div className="h-4 w-24 animate-pulse rounded bg-gray-200" />
+                <div className="h-4 w-24 animate-pulse rounded bg-sand-200" />
               </td>
               <td className="px-6 py-4">
-                <div className="h-5 w-16 animate-pulse rounded-full bg-gray-200" />
+                <div className="h-5 w-16 animate-pulse rounded-full bg-sand-200" />
               </td>
               <td className="px-6 py-4">
-                <div className="h-4 w-16 animate-pulse rounded bg-gray-200" />
+                <div className="h-4 w-16 animate-pulse rounded bg-sand-200" />
               </td>
               <td className="px-6 py-4">
-                <div className="h-4 w-6 animate-pulse rounded bg-gray-200" />
+                <div className="h-4 w-6 animate-pulse rounded bg-sand-200" />
               </td>
               <td className="px-6 py-4">
-                <div className="h-4 w-20 animate-pulse rounded bg-gray-200" />
+                <div className="h-4 w-20 animate-pulse rounded bg-sand-200" />
               </td>
             </tr>
           ))}
@@ -125,7 +125,7 @@ export default function LeadsPageContent({ currentParams }: Props) {
     router.push(`/leads?${params.toString()}`);
   };
 
-  const handleSearchSubmit = (event: React.FormEvent): void => {
+  const handleSearchSubmit = (event: { preventDefault(): void }): void => {
     event.preventDefault();
     updateFilter("q", searchInput);
   };
@@ -137,18 +137,18 @@ export default function LeadsPageContent({ currentParams }: Props) {
 
   return (
     <div>
-      <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+      <div className="mb-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <form onSubmit={handleSearchSubmit} className="flex gap-2">
           <input
             type="text"
             value={searchInput}
             onChange={(event) => setSearchInput(event.target.value)}
             placeholder="Search by name, email, company..."
-            className="w-64 rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-64 rounded-lg border border-sand-200 bg-white px-3 py-2 text-sm text-ink-900 placeholder-ink-400 focus:border-coffee-500 focus:outline-none focus:ring-1 focus:ring-coffee-500"
           />
           <button
             type="submit"
-            className="rounded-lg bg-gray-100 px-4 py-2 text-sm font-medium hover:bg-gray-200"
+            className="rounded-lg border border-sand-200 bg-white px-4 py-2 text-sm text-ink-600 hover:bg-sand-100 transition-colors"
           >
             Search
           </button>
@@ -159,7 +159,7 @@ export default function LeadsPageContent({ currentParams }: Props) {
                 setSearchInput("");
                 updateFilter("q", "");
               }}
-              className="rounded-lg px-3 py-2 text-sm text-gray-500 hover:text-gray-700"
+              className="px-3 py-2 text-sm text-ink-400 hover:text-ink-600 transition-colors"
             >
               Clear
             </button>
@@ -170,7 +170,7 @@ export default function LeadsPageContent({ currentParams }: Props) {
           <select
             value={currentParams.status ?? ""}
             onChange={(event) => updateFilter("status", event.target.value)}
-            className="rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="rounded-lg border border-sand-200 bg-white px-3 py-2 text-sm text-ink-600 focus:border-coffee-500 focus:outline-none focus:ring-1 focus:ring-coffee-500"
           >
             <option value="">All Statuses</option>
             {Object.values(LeadStatusEnum).map((statusValue) => (
@@ -182,7 +182,7 @@ export default function LeadsPageContent({ currentParams }: Props) {
 
           <button
             onClick={() => setIsCreateModalOpen(true)}
-            className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700"
+            className="rounded-lg bg-coffee-500 px-4 py-2 text-sm font-medium text-white hover:bg-coffee-600 transition-colors"
           >
             New Lead
           </button>
@@ -192,33 +192,33 @@ export default function LeadsPageContent({ currentParams }: Props) {
       {isLoading && <LeadsTableSkeleton />}
 
       {!isLoading && errorMessage && (
-        <div className="rounded-lg border border-red-200 bg-red-50 p-6 text-center">
-          <p className="text-red-600">{errorMessage}</p>
-          <p className="mt-1 text-sm text-red-400">Make sure the backend is running.</p>
+        <div className="rounded-xl border border-red-100 bg-red-50 p-6 text-center">
+          <p className="text-sm text-red-600">{errorMessage}</p>
+          <p className="mt-1 text-xs text-red-400">Make sure the backend is running.</p>
         </div>
       )}
 
       {!isLoading && !errorMessage && leadsResponse && (
         <>
           {leadsResponse.data.length === 0 ? (
-            <div className="rounded-lg border-2 border-dashed border-gray-300 py-16 text-center">
-              <p className="text-lg font-medium text-gray-500">No leads found</p>
-              <p className="mt-1 text-sm text-gray-400">
+            <div className="rounded-xl border border-dashed border-sand-200 py-16 text-center">
+              <p className="text-sm font-medium text-ink-600">No leads found</p>
+              <p className="mt-1 text-xs text-ink-400">
                 {currentParams.q || currentParams.status
                   ? "Try adjusting your search or filter"
                   : "Create your first lead to get started"}
               </p>
             </div>
           ) : (
-            <div className="overflow-hidden rounded-lg border bg-white shadow-sm">
-              <table className="min-w-full divide-y divide-gray-200">
-                <thead className="bg-gray-50">
+            <div className="overflow-hidden rounded-xl border border-sand-200 bg-white">
+              <table className="min-w-full divide-y divide-sand-200">
+                <thead className="bg-sand-100">
                   <tr>
                     {["Name", "Company", "Status", "Value", "Comments", "Created"].map(
                       (header) => (
                         <th
                           key={header}
-                          className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
+                          className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wide text-ink-400"
                         >
                           {header}
                         </th>
@@ -226,34 +226,32 @@ export default function LeadsPageContent({ currentParams }: Props) {
                     )}
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-gray-200 bg-white">
+                <tbody className="divide-y divide-sand-100 bg-white">
                   {leadsResponse.data.map((lead: Lead) => (
                     <tr
                       key={lead.id}
                       onClick={() => router.push(`/leads/${lead.id}`)}
-                      className="cursor-pointer hover:bg-gray-50"
+                      className="cursor-pointer transition-colors hover:bg-sand-50"
                     >
                       <td className="px-6 py-4">
-                        <div>
-                          <p className="font-medium text-gray-900">{lead.name}</p>
-                          {lead.email && (
-                            <p className="text-sm text-gray-500">{lead.email}</p>
-                          )}
-                        </div>
+                        <p className="text-sm font-medium text-ink-900">{lead.name}</p>
+                        {lead.email && (
+                          <p className="mt-0.5 text-xs text-ink-400">{lead.email}</p>
+                        )}
                       </td>
-                      <td className="px-6 py-4 text-sm text-gray-600">
+                      <td className="px-6 py-4 text-sm text-ink-600">
                         {lead.company ?? "—"}
                       </td>
                       <td className="px-6 py-4">
                         <StatusBadge status={lead.status} />
                       </td>
-                      <td className="px-6 py-4 text-sm text-gray-600">
+                      <td className="px-6 py-4 text-sm text-ink-600">
                         {lead.value != null ? `$${lead.value.toLocaleString()}` : "—"}
                       </td>
-                      <td className="px-6 py-4 text-sm text-gray-600">
+                      <td className="px-6 py-4 text-sm text-ink-400">
                         {lead._count?.comments ?? 0}
                       </td>
-                      <td className="px-6 py-4 text-sm text-gray-500">
+                      <td className="px-6 py-4 text-xs text-ink-400">
                         {new Date(lead.createdAt).toLocaleDateString()}
                       </td>
                     </tr>
@@ -263,7 +261,7 @@ export default function LeadsPageContent({ currentParams }: Props) {
             </div>
           )}
 
-          <div className="mt-4 flex items-center justify-between text-sm text-gray-500">
+          <div className="mt-4 flex items-center justify-between text-xs text-ink-400">
             <span>
               Showing {leadsResponse.data.length} of {leadsResponse.meta.total} leads
             </span>

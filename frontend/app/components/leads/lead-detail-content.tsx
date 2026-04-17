@@ -26,33 +26,33 @@ interface EditFormState {
 function DetailSkeleton() {
   return (
     <div>
-      <div className="mb-6 h-4 w-24 animate-pulse rounded bg-gray-200" />
-      <div className="rounded-xl border bg-white p-6 shadow-sm">
+      <div className="mb-6 h-3.5 w-20 animate-pulse rounded bg-sand-200" />
+      <div className="rounded-xl border border-sand-200 bg-white p-6">
         <div className="mb-6 flex items-start justify-between">
           <div className="space-y-2">
-            <div className="h-8 w-48 animate-pulse rounded bg-gray-200" />
-            <div className="h-5 w-16 animate-pulse rounded-full bg-gray-200" />
+            <div className="h-7 w-48 animate-pulse rounded bg-sand-200" />
+            <div className="h-5 w-16 animate-pulse rounded-full bg-sand-100" />
           </div>
           <div className="flex gap-2">
-            <div className="h-9 w-16 animate-pulse rounded bg-gray-200" />
-            <div className="h-9 w-16 animate-pulse rounded bg-gray-200" />
+            <div className="h-9 w-14 animate-pulse rounded-lg bg-sand-200" />
+            <div className="h-9 w-14 animate-pulse rounded-lg bg-sand-200" />
           </div>
         </div>
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
           {Array.from({ length: 5 }).map((_, index) => (
             <div key={index} className={index === 4 ? "sm:col-span-2" : ""}>
-              <div className="h-3 w-16 animate-pulse rounded bg-gray-200" />
-              <div className="mt-2 h-5 w-40 animate-pulse rounded bg-gray-100" />
+              <div className="h-3 w-14 animate-pulse rounded bg-sand-200" />
+              <div className="mt-2 h-5 w-40 animate-pulse rounded bg-sand-100" />
             </div>
           ))}
         </div>
       </div>
-      <div className="mt-8 rounded-xl border bg-white p-6 shadow-sm">
-        <div className="mb-6 h-6 w-32 animate-pulse rounded bg-gray-200" />
+      <div className="mt-6 rounded-xl border border-sand-200 bg-white p-6">
+        <div className="mb-5 h-5 w-28 animate-pulse rounded bg-sand-200" />
         {Array.from({ length: 2 }).map((_, index) => (
-          <div key={index} className="mb-4 rounded-lg bg-gray-50 p-4">
-            <div className="h-4 w-full animate-pulse rounded bg-gray-200" />
-            <div className="mt-2 h-3 w-24 animate-pulse rounded bg-gray-100" />
+          <div key={index} className="mb-3 rounded-lg bg-sand-100 p-4">
+            <div className="h-4 w-full animate-pulse rounded bg-sand-200" />
+            <div className="mt-2 h-3 w-24 animate-pulse rounded bg-sand-200" />
           </div>
         ))}
       </div>
@@ -61,6 +61,9 @@ function DetailSkeleton() {
 }
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3001/api";
+
+const inputClass =
+  "mt-1 w-full rounded-lg border border-sand-200 bg-sand-50 px-3 py-2 text-sm text-ink-900 focus:border-coffee-500 focus:outline-none focus:ring-1 focus:ring-coffee-500";
 
 export default function LeadDetailContent({ leadId }: Props) {
   const router = useRouter();
@@ -207,11 +210,11 @@ export default function LeadDetailContent({ leadId }: Props) {
   if (fetchError || !lead) {
     return (
       <div>
-        <Link href="/leads" className="mb-6 block text-sm text-gray-500 hover:text-gray-700">
+        <Link href="/leads" className="mb-6 block text-sm text-ink-400 hover:text-ink-600 transition-colors">
           ← Back to Leads
         </Link>
-        <div className="rounded-lg border border-red-200 bg-red-50 p-6 text-center">
-          <p className="text-red-600">{fetchError ?? "Lead not found"}</p>
+        <div className="rounded-xl border border-red-100 bg-red-50 p-6 text-center">
+          <p className="text-sm text-red-600">{fetchError ?? "Lead not found"}</p>
         </div>
       </div>
     );
@@ -219,13 +222,11 @@ export default function LeadDetailContent({ leadId }: Props) {
 
   return (
     <div>
-      <div className="mb-6 flex items-center gap-2">
-        <Link href="/leads" className="text-sm text-gray-500 hover:text-gray-700">
-          ← Back to Leads
-        </Link>
-      </div>
+      <Link href="/leads" className="mb-6 block text-sm text-ink-400 hover:text-ink-600 transition-colors">
+        ← Back to Leads
+      </Link>
 
-      <div className="rounded-xl border bg-white p-6 shadow-sm">
+      <div className="rounded-xl border border-sand-200 bg-white p-6">
         <div className="mb-6 flex items-start justify-between">
           <div>
             {isEditing ? (
@@ -235,12 +236,12 @@ export default function LeadDetailContent({ leadId }: Props) {
                 onChange={(event) =>
                   handleFieldChange("name", event.target.value)
                 }
-                className="text-2xl font-bold border-b-2 border-blue-500 focus:outline-none"
+                className="text-xl font-semibold border-b border-sand-200 bg-transparent text-ink-900 focus:border-coffee-500 focus:outline-none pb-0.5"
               />
             ) : (
-              <h1 className="text-2xl font-bold text-gray-900">{lead.name}</h1>
+              <h1 className="text-xl font-semibold text-ink-900">{lead.name}</h1>
             )}
-            <div className="mt-1">
+            <div className="mt-2">
               <StatusBadge status={isEditing ? editForm.status : lead.status} />
             </div>
           </div>
@@ -253,32 +254,32 @@ export default function LeadDetailContent({ leadId }: Props) {
                     setIsEditing(false);
                     setErrorMessage(null);
                   }}
-                  className="rounded-lg border px-4 py-2 text-sm font-medium hover:bg-gray-50"
+                  className="rounded-lg border border-sand-200 px-3 py-1.5 text-sm text-ink-600 hover:bg-sand-100 transition-colors"
                 >
                   Cancel
                 </button>
                 <button
                   onClick={handleSave}
                   disabled={isSaving}
-                  className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 disabled:opacity-50"
+                  className="rounded-lg bg-coffee-500 px-3 py-1.5 text-sm font-medium text-white hover:bg-coffee-600 disabled:opacity-50 transition-colors"
                 >
-                  {isSaving ? "Saving..." : "Save"}
+                  {isSaving ? "Saving…" : "Save"}
                 </button>
               </>
             ) : (
               <>
                 <button
                   onClick={() => setIsEditing(true)}
-                  className="rounded-lg border px-4 py-2 text-sm font-medium hover:bg-gray-50"
+                  className="rounded-lg border border-sand-200 px-3 py-1.5 text-sm text-ink-600 hover:bg-sand-100 transition-colors"
                 >
                   Edit
                 </button>
                 <button
                   onClick={handleDelete}
                   disabled={isDeleting}
-                  className="rounded-lg border border-red-200 px-4 py-2 text-sm font-medium text-red-600 hover:bg-red-50 disabled:opacity-50"
+                  className="rounded-lg border border-red-100 px-3 py-1.5 text-sm text-red-500 hover:bg-red-50 disabled:opacity-50 transition-colors"
                 >
-                  {isDeleting ? "Deleting..." : "Delete"}
+                  {isDeleting ? "Deleting…" : "Delete"}
                 </button>
               </>
             )}
@@ -291,128 +292,66 @@ export default function LeadDetailContent({ leadId }: Props) {
           </div>
         )}
 
-        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
           <div>
-            <p className="text-xs font-medium uppercase tracking-wider text-gray-400">
-              Email
-            </p>
+            <p className="text-xs text-ink-400">Email</p>
             {isEditing ? (
-              <input
-                type="email"
-                value={editForm.email}
-                onChange={(event) =>
-                  handleFieldChange("email", event.target.value)
-                }
-                className="mt-1 w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="email@example.com"
-              />
+              <input type="email" value={editForm.email} onChange={(e) => handleFieldChange("email", e.target.value)} className={inputClass} placeholder="email@example.com" />
             ) : (
-              <p className="mt-1 text-sm text-gray-900">
-                {lead.email ?? "—"}
-              </p>
+              <p className="mt-1 text-sm text-ink-900">{lead.email ?? "—"}</p>
             )}
           </div>
 
           <div>
-            <p className="text-xs font-medium uppercase tracking-wider text-gray-400">
-              Company
-            </p>
+            <p className="text-xs text-ink-400">Company</p>
             {isEditing ? (
-              <input
-                type="text"
-                value={editForm.company}
-                onChange={(event) =>
-                  handleFieldChange("company", event.target.value)
-                }
-                className="mt-1 w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="Company name"
-              />
+              <input type="text" value={editForm.company} onChange={(e) => handleFieldChange("company", e.target.value)} className={inputClass} placeholder="Company name" />
             ) : (
-              <p className="mt-1 text-sm text-gray-900">
-                {lead.company ?? "—"}
-              </p>
+              <p className="mt-1 text-sm text-ink-900">{lead.company ?? "—"}</p>
             )}
           </div>
 
           <div>
-            <p className="text-xs font-medium uppercase tracking-wider text-gray-400">
-              Status
-            </p>
+            <p className="text-xs text-ink-400">Status</p>
             {isEditing ? (
-              <select
-                value={editForm.status}
-                onChange={(event) =>
-                  handleFieldChange("status", event.target.value)
-                }
-                className="mt-1 w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-              >
-                {Object.values(LeadStatusEnum).map((statusValue) => (
-                  <option key={statusValue} value={statusValue}>
-                    {statusValue.replace("_", " ")}
-                  </option>
+              <select value={editForm.status} onChange={(e) => handleFieldChange("status", e.target.value)} className={inputClass}>
+                {Object.values(LeadStatusEnum).map((s) => (
+                  <option key={s} value={s}>{s.replace("_", " ")}</option>
                 ))}
               </select>
             ) : (
-              <p className="mt-1 text-sm text-gray-900">
-                {lead.status.replace("_", " ")}
-              </p>
+              <p className="mt-1 text-sm text-ink-900">{lead.status.replace("_", " ")}</p>
             )}
           </div>
 
           <div>
-            <p className="text-xs font-medium uppercase tracking-wider text-gray-400">
-              Value
-            </p>
+            <p className="text-xs text-ink-400">Value</p>
             {isEditing ? (
-              <input
-                type="number"
-                min="0"
-                step="0.01"
-                value={editForm.value}
-                onChange={(event) =>
-                  handleFieldChange("value", event.target.value)
-                }
-                className="mt-1 w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="0.00"
-              />
+              <input type="number" min="0" step="0.01" value={editForm.value} onChange={(e) => handleFieldChange("value", e.target.value)} className={inputClass} placeholder="0.00" />
             ) : (
-              <p className="mt-1 text-sm text-gray-900">
+              <p className="mt-1 text-sm text-ink-900">
                 {lead.value != null ? `$${lead.value.toLocaleString()}` : "—"}
               </p>
             )}
           </div>
 
           <div className="sm:col-span-2">
-            <p className="text-xs font-medium uppercase tracking-wider text-gray-400">
-              Notes
-            </p>
+            <p className="text-xs text-ink-400">Notes</p>
             {isEditing ? (
-              <textarea
-                value={editForm.notes}
-                onChange={(event) =>
-                  handleFieldChange("notes", event.target.value)
-                }
-                rows={4}
-                className="mt-1 w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="Additional notes..."
-              />
+              <textarea value={editForm.notes} onChange={(e) => handleFieldChange("notes", e.target.value)} rows={4} className={inputClass} placeholder="Additional notes…" />
             ) : (
-              <p className="mt-1 text-sm text-gray-900">
-                {lead.notes ?? "—"}
-              </p>
+              <p className="mt-1 text-sm text-ink-900 whitespace-pre-wrap">{lead.notes ?? "—"}</p>
             )}
           </div>
         </div>
 
-        <div className="mt-6 border-t pt-4 text-xs text-gray-400">
-          <span>Created: {new Date(lead.createdAt).toLocaleString()}</span>
-          <span className="ml-4">
-            Updated: {new Date(lead.updatedAt).toLocaleString()}
-          </span>
+        <div className="mt-6 border-t border-sand-100 pt-4 text-xs text-ink-400">
+          <span>Created {new Date(lead.createdAt).toLocaleString()}</span>
+          <span className="ml-4">Updated {new Date(lead.updatedAt).toLocaleString()}</span>
         </div>
       </div>
 
-      <div className="mt-8">
+      <div className="mt-6">
         <CommentsSection leadId={lead.id} initialComments={comments} />
       </div>
     </div>
