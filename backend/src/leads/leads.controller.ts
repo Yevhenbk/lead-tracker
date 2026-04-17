@@ -11,6 +11,7 @@ import {
   Query,
 } from "@nestjs/common";
 import {
+  ApiBadRequestResponse,
   ApiCreatedResponse,
   ApiNoContentResponse,
   ApiNotFoundResponse,
@@ -43,6 +44,7 @@ export class LeadsController {
 
   @Post()
   @ApiCreatedResponse({ description: "Lead created" })
+  @ApiBadRequestResponse({ description: "Invalid input data" })
   create(@Body() createLeadDto: CreateLeadDto) {
     return this.leadsService.create(createLeadDto);
   }
@@ -50,6 +52,7 @@ export class LeadsController {
   @Patch(":id")
   @ApiOkResponse({ description: "Lead updated" })
   @ApiNotFoundResponse({ description: "Lead not found" })
+  @ApiBadRequestResponse({ description: "Invalid input data" })
   update(@Param("id") id: string, @Body() updateLeadDto: UpdateLeadDto) {
     return this.leadsService.update(id, updateLeadDto);
   }
